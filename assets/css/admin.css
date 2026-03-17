@@ -1,0 +1,925 @@
+:root {
+    --primary: #8B5CF6;
+    --secondary: #EC4899;
+    --dark: #1F2937;
+    --light: #F9FAFB;
+    --white: #FFFFFF;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--light);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.admin-sidebar {
+    width: 250px;
+    background: #1F2937;
+    color: #FFFFFF;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 0.3s ease;
+}
+
+.admin-sidebar-header {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar-header h4 {
+    margin: 0;
+    font-weight: 700;
+    color: #FFFFFF !important;
+    text-shadow: none;
+    letter-spacing: 0.5px;
+}
+
+.admin-sidebar-menu {
+    padding: 20px 0;
+}
+
+.admin-menu-item {
+    padding: 15px 20px;
+    color: rgba(255,255,255, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.admin-menu-item:hover,
+.admin-menu-item.active {
+    background: rgba(139, 92, 246, 0.2);
+    color: #FFFFFF;
+    border-left: 4px solid var(--primary);
+}
+
+.admin-menu-item:hover,
+.admin-menu-item.active {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--white);
+    border-left: 4px solid var(--primary);
+}
+
+.admin-menu-item i {
+    width: 20px;
+}
+
+.admin-content {
+    flex: 1;
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.admin-topbar {
+    background: var(--white);
+    padding: 15px 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-topbar h3 {
+    margin: 0;
+    color: var(--dark);
+}
+
+.admin-topbar a {
+    color: var(--secondary);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+a {
+    max-width: 100%;
+}
+
+.stat-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.stat-card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.stat-card-icon i {
+    font-size: 1.8rem;
+    color: var(--white);
+}
+
+.stat-card-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-card-pink {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card-blue {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card-green {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-card-title {
+    color: #6B7280;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.stat-card-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+}
+
+.admin-card {
+    background: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.admin-card h4 {
+    color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 800px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.admin-table th {
+    background: var(--light);
+    padding: 15px;
+    font-weight: 600;
+    color: var(--dark);
+    border: none;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 15px;
+    border-color: #E5E7EB;
+    vertical-align: middle;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-table td:first-child,
+.admin-table th:first-child {
+    min-width: 80px;
+}
+
+.admin-table td:last-child,
+.admin-table th:last-child {
+    min-width: 100px;
+}
+
+.admin-table img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.btn-action {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: #E0E7FF;
+    color: #4F46E5;
+}
+
+.btn-edit:hover {
+    background: #4F46E5;
+    color: var(--white);
+}
+
+.btn-delete {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.btn-delete:hover {
+    background: #DC2626;
+    color: var(--white);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+    color: var(--white);
+}
+
+.admin-form label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--dark);
+}
+
+.admin-form .form-control {
+    border-radius: 10px;
+    padding: 12px 15px;
+    border: 2px solid #E5E7EB;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 100%;
+}
+
+.admin-form .input-group {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.admin-form .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+}
+
+.preview-image {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 10px;
+    border: 2px dashed #E5E7EB;
+    max-width: 100%;
+}
+
+.progress {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+}
+
+.login-card {
+    background: var(--white);
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-card h3 {
+    text-align: center;
+    color: var(--dark);
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.login-card a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-card a:hover {
+    color: var(--secondary);
+}
+
+.login-logo {
+    font-size: 3.5rem;
+    color: var(--primary);
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.login-logo:hover {
+    transform: scale(1.1);
+}
+
+.login-title {
+    text-align: center;
+    color: var(--dark);
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.login-subtitle {
+    color: #6B7280 !important;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.login-card .form-label {
+    color: var(--dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.login-card .input-group-text {
+    background: var(--light);
+    border: 2px solid #E5E7EB;
+    border-right: none;
+}
+
+.login-card .form-control {
+    border: 2px solid #E5E7EB;
+    border-left: none;
+    padding: 12px 15px;
+    font-size: 1rem;
+    color: var(--dark);
+    background: var(--white);
+}
+
+.login-card .input-group .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: none;
+}
+
+.login-card .input-group:focus-within .input-group-text {
+    border-color: var(--primary);
+}
+
+.login-card .input-group:focus-within .form-control {
+    border-color: var(--primary);
+}
+
+.login-card .form-control:focus {
+    border-color: var(--primary);
+    color: var(--dark);
+    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+}
+
+.login-card .alert {
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.login-card a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-card a:hover {
+    color: var(--secondary);
+}
+
+.login-card .back-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+}
+
+.login-card .back-link:hover {
+    background: var(--primary);
+    color: var(--white) !important;
+    transform: translateY(-2px);
+}
+
+.login-card .text-center i {
+    margin-bottom: 10px;
+}
+
+.login-card .input-group {
+    margin-bottom: 5px;
+}
+
+.login-card .input-group-text i {
+    color: var(--primary);
+    width: 20px;
+    opacity: 0.7;
+}
+
+.login-card .input-group {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.login-card .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border: none;
+    color: var(--white);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding: 14px;
+    font-size: 1rem;
+    touch-action: manipulation;
+}
+
+.login-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
+
+.login-card .form-control::placeholder {
+    color: #9CA3AF;
+}
+
+.login-card .label-icon {
+    color: var(--dark);
+    opacity: 0.7;
+}
+
+.login-card .text-muted {
+    color: #6B7280 !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.login-card .alert {
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.login-card .alert-danger {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #DC2626;
+}
+
+.badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge-success {
+    background: #D1FAE5;
+    color: #059669;
+}
+
+.badge-pending {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.badge-danger {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+@media (max-width: 991px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+        width: 280px;
+    }
+    
+    .admin-sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .admin-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .admin-sidebar-header h4 {
+        font-size: 1.2rem;
+        color: #FFFFFF !important;
+    }
+    
+    .admin-menu-item {
+        font-size: 0.95rem;
+        padding: 14px 18px;
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    body {
+        overflow-x: hidden;
+    }
+    
+    .admin-content {
+        padding: 15px;
+    }
+    
+    .admin-topbar {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .admin-topbar h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+    
+    .admin-topbar .btn {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .btn-gradient,
+    .btn-primary,
+    .admin-topbar a {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .table-responsive {
+        margin: -15px;
+        padding: 15px;
+    }
+    
+    .admin-table {
+        font-size: 0.8rem;
+        min-width: 600px;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 8px;
+    }
+    
+    .admin-table img {
+        width: 50px;
+        height: 35px;
+    }
+    
+    .admin-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .admin-card h4 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+    
+    .btn-action {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .stat-card-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+    
+    .stat-card-title {
+        font-size: 0.8rem;
+    }
+    
+    .stat-card-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    body {
+        overflow-x: hidden;
+        font-size: 14px;
+    }
+    
+    .admin-content {
+        padding: 10px;
+    }
+    
+    .admin-topbar {
+        padding: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .admin-topbar h3 {
+        font-size: 1.1rem;
+        width: 100%;
+    }
+    
+    .admin-topbar .btn {
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
+    
+    .admin-card {
+        padding: 12px;
+        border-radius: 10px;
+    }
+    
+    .admin-card h4 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    
+    .table-responsive {
+        margin: -10px;
+        padding: 10px;
+    }
+    
+    .admin-table {
+        font-size: 0.75rem;
+        min-width: 500px;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 8px 6px;
+    }
+    
+    .admin-table th {
+        font-size: 0.7rem;
+    }
+    
+    .admin-table img {
+        width: 40px;
+        height: 30px;
+    }
+    
+    .btn-action {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+        padding: 0;
+    }
+    
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .admin-form .form-control,
+    .admin-form select {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+    
+    .admin-form label {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    .preview-image {
+        width: 150px;
+        height: 110px;
+    }
+    
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    .modal-content {
+        border-radius: 12px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-header {
+        padding: 12px 15px;
+    }
+    
+    .modal-header h5 {
+        font-size: 1.1rem;
+    }
+    
+    .login-card {
+        padding: 35px 25px;
+    }
+    
+    .login-card h3 {
+        font-size: 1.5rem;
+    }
+    
+    .login-card .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .login-card .form-control,
+    .login-card .input-group-text {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+    
+    .login-card .input-group {
+        margin-bottom: 20px;
+    }
+    
+    .login-card .mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .login-card .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .login-card .btn-primary {
+        padding: 14px;
+        font-size: 1rem;
+        touch-action: manipulation;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+.stat-card-value {
+    font-size: 1.3rem;
+}
+
+.row {
+    margin-right: -10px;
+    margin-left: -10px;
+}
+
+.row > [class*="col-"] {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.col-12,
+.col-lg-5,
+.col-lg-7,
+.col-md-3,
+.col-md-4,
+.col-md-6 {
+    max-width: 100%;
+}
+
+.modal {
+    z-index: 1050;
+}
+
+.modal-dialog {
+    max-width: 95%;
+    margin: 1rem auto;
+}
+
+.modal-lg .modal-dialog {
+    max-width: 95%;
+}
+
+@media (max-width: 767px) {
+    .modal-dialog {
+        margin: 5px;
+    }
+    
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+    }
+    
+    .input-group {
+        flex-wrap: nowrap;
+    }
+    
+    .input-group-text {
+        flex-shrink: 0;
+    }
+}
+}
