@@ -87,12 +87,12 @@ farhanale.my.id/
 
 2. **Import database**:
    - Buka phpMyAdmin: http://localhost/phpmyadmin
-   - Buat database baru dengan nama: `farhanale_db`
+   - Buat database
    - Import file `database.sql`
 
    Atau via command line:
    ```bash
-   mysql -u root -p farhanale_db < database.sql
+   mysql -u root -p database_name < database.sql
    ```
 
 3. **Konfigurasi database** (opsional):
@@ -101,7 +101,7 @@ farhanale.my.id/
    define('DB_HOST', 'localhost');
    define('DB_USER', 'root');
    define('DB_PASS', '');
-   define('DB_NAME', 'farhanale_db');
+   define('DB_NAME', 'database_name');
    ```
 
 4. **Start server**:
@@ -110,8 +110,6 @@ farhanale.my.id/
 
 5. **Login ke Admin Panel**:
    - URL: `http://localhost/farhanale.my.id/admin/`
-   - Username: `admin`
-   - Password: `admin123`
 
    ⚠️ **PENTING**: Ganti password default setelah login pertama!
 
