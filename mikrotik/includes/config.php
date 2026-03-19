@@ -4,7 +4,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'mikrotik_db');
 
-define('SITE_URL', 'https://mikrotik.farhanale.my.id');
+define('SITE_URL', 'http://localhost:8000');
 define('SITE_NAME', 'MikroTik Blog by Farhan Ale');
 
 try {

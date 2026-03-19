@@ -1,12 +1,25 @@
 $(document).ready(function() {
     $('#toggleSidebar').on('click', function() {
         $('.admin-sidebar').toggleClass('show');
+
+        if ($(window).width() < 992) {
+            if ($('.admin-sidebar').hasClass('show')) {
+                $('body').append('<div class="sidebar-overlay"></div>');
+                $('.sidebar-overlay').on('click', function() {
+                    $('.admin-sidebar').removeClass('show');
+                    $(this).remove();
+                });
+            } else {
+                $('.sidebar-overlay').remove();
+            }
+        }
     });
-    
+
     $(document).on('click', function(e) {
         if ($(window).width() < 992) {
             if (!$(e.target).closest('.admin-sidebar').length && !$(e.target).closest('#toggleSidebar').length) {
                 $('.admin-sidebar').removeClass('show');
+                $('.sidebar-overlay').remove();
             }
         }
     });

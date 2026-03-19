@@ -11,15 +11,14 @@ $selectedTag = isset($_GET['slug']) ? sanitize($_GET['slug']) : '';
 $tags = $pdo->query("SELECT * FROM tags ORDER BY article_count DESC")->fetchAll();
 
 $where = ["a.status = 'published'"];
-$params = [];
 $tagName = 'Semua Tags';
 
 if ($selectedTag) {
-    $where[] = "a.id IN (SELECT article_id FROM article_tags WHERE tag_id = (SELECT id FROM tags WHERE slug = ?))";
-    $params[] = $selectedTag;
+    $where[] = "a.id IN (SELECT article_id FROM article_tags WHERE tag_id = (SELECT id FROM tags WHERE slug = :slug))";
     
-    $tagQuery = $pdo->prepare("SELECT * FROM tags WHERE slug = ?");
-    $tagQuery->execute([$selectedTag]);
+    $tagQuery = $pdo->prepare("SELECT * FROM tags WHERE slug = :slug");
+    $tagQuery->bindValue(':slug', $selectedTag);
+    $tagQuery->execute();
     $tag = $tagQuery->fetch();
     
     if ($tag) {
@@ -30,7 +29,10 @@ if ($selectedTag) {
 $whereClause = implode(' AND ', $where);
 
 $totalArticles = $pdo->prepare("SELECT COUNT(DISTINCT a.id) FROM articles a WHERE $whereClause");
-$totalArticles->execute($params);
+if ($selectedTag) {
+    $totalArticles->bindValue(':slug', $selectedTag);
+}
+$totalArticles->execute();
 $totalArticles = $totalArticles->fetchColumn();
 $totalPages = ceil($totalArticles / $limit);
 
@@ -43,8 +45,8 @@ $articles = $pdo->prepare("
     ORDER BY a.published_at DESC
     LIMIT :limit OFFSET :offset
 ");
-foreach ($params as $i => $param) {
-    $articles->bindValue($i + 1, $param);
+if ($selectedTag) {
+    $articles->bindValue(':slug', $selectedTag);
 }
 $articles->bindValue(':limit', $limit, PDO::PARAM_INT);
 $articles->bindValue(':offset', $offset, PDO::PARAM_INT);

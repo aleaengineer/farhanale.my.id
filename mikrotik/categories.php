@@ -11,15 +11,14 @@ $selectedCategory = isset($_GET['slug']) ? sanitize($_GET['slug']) : '';
 $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 $where = ["status = 'published'"];
-$params = [];
 $categoryName = 'Semua Kategori';
 
 if ($selectedCategory) {
-    $where[] = "category_id = (SELECT id FROM categories WHERE slug = ?)";
-    $params[] = $selectedCategory;
+    $where[] = "category_id = (SELECT id FROM categories WHERE slug = :slug)";
     
-    $catQuery = $pdo->prepare("SELECT * FROM categories WHERE slug = ?");
-    $catQuery->execute([$selectedCategory]);
+    $catQuery = $pdo->prepare("SELECT * FROM categories WHERE slug = :slug");
+    $catQuery->bindValue(':slug', $selectedCategory);
+    $catQuery->execute();
     $category = $catQuery->fetch();
     
     if ($category) {
@@ -30,7 +29,10 @@ if ($selectedCategory) {
 $whereClause = implode(' AND ', $where);
 
 $totalArticles = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE $whereClause");
-$totalArticles->execute($params);
+if ($selectedCategory) {
+    $totalArticles->bindValue(':slug', $selectedCategory);
+}
+$totalArticles->execute();
 $totalArticles = $totalArticles->fetchColumn();
 $totalPages = ceil($totalArticles / $limit);
 
@@ -43,8 +45,8 @@ $articles = $pdo->prepare("
     ORDER BY a.published_at DESC
     LIMIT :limit OFFSET :offset
 ");
-foreach ($params as $i => $param) {
-    $articles->bindValue($i + 1, $param);
+if ($selectedCategory) {
+    $articles->bindValue(':slug', $selectedCategory);
 }
 $articles->bindValue(':limit', $limit, PDO::PARAM_INT);
 $articles->bindValue(':offset', $offset, PDO::PARAM_INT);

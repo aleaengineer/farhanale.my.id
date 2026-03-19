@@ -258,18 +258,6 @@ $articles = $articles->fetchAll();
 $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 $tags = $pdo->query("SELECT * FROM tags ORDER BY name")->fetchAll();
 
-$editId = isset($_GET['edit']) ? (int)$_GET['edit'] : null;
-$editData = null;
-if ($editId) {
-    $editStmt = $pdo->prepare("SELECT * FROM articles WHERE id = ?");
-    $editStmt->execute([$editId]);
-    $editData = $editStmt->fetch();
-    
-    $tagStmt = $pdo->prepare("SELECT tag_id FROM article_tags WHERE article_id = ?");
-    $tagStmt->execute([$editId]);
-    $editData['tags'] = array_column($tagStmt->fetchAll(), 'tag_id');
-}
-
 $pageTitle = 'Manajemen Artikel';
 include 'includes/header.php';
 ?>
@@ -314,9 +302,9 @@ include 'includes/header.php';
                 <h2 class="header-title">Manajemen Artikel</h2>
             </div>
             <div class="header-right">
-                <a href="?add=1" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articleModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articleModal">
                     <i class="fas fa-plus me-2"></i>Tambah Artikel
-                </a>
+                </button>
             </div>
         </div>
         
@@ -360,8 +348,7 @@ include 'includes/header.php';
                     </div>
                 </div>
                 
-                <div class="table-responsive">
-                    <table class="table table-hover">
+                <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th width="80">Image</th>
@@ -419,7 +406,7 @@ include 'includes/header.php';
                                         <a href="<?php echo SITE_URL; ?>/article.php?slug=<?php echo htmlspecialchars($article['slug']); ?>" target="_blank" class="btn btn-sm btn-outline-primary" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="?edit=<?php echo $article['id']; ?>" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <a href="edit-article.php?id=<?php echo $article['id']; ?>" class="btn btn-sm btn-outline-secondary" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <?php if ($article['status'] == 'published'): ?>
@@ -449,7 +436,6 @@ include 'includes/header.php';
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                </div>
                 
                 <?php if ($totalPages > 1): ?>
                 <nav>
@@ -483,31 +469,28 @@ include 'includes/header.php';
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><?php echo $editId ? 'Edit Artikel' : 'Tambah Artikel Baru'; ?></h5>
+                <h5 class="modal-title">Tambah Artikel Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="" enctype="multipart/form-data" id="articleForm">
-                    <input type="hidden" name="action" value="<?php echo $editId ? 'update' : 'add'; ?>">
-                    <?php if ($editId): ?>
-                    <input type="hidden" name="id" value="<?php echo $editId; ?>">
-                    <?php endif; ?>
+                <form method="POST" action="" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="add">
                     
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="form-group mb-3">
                                 <label class="form-label">Title *</label>
-                                <input type="text" class="form-control" name="title" required value="<?php echo $editData ? htmlspecialchars($editData['title']) : ''; ?>">
+                                <input type="text" class="form-control" name="title" required>
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label class="form-label">Excerpt</label>
-                                <textarea class="form-control" name="excerpt" rows="2"><?php echo $editData ? htmlspecialchars($editData['excerpt']) : ''; ?></textarea>
+                                <textarea class="form-control" name="excerpt" rows="2"></textarea>
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label class="form-label">Content *</label>
-                                <textarea class="form-control" name="content" id="contentEditor" rows="15" required><?php echo $editData ? htmlspecialchars($editData['content']) : ''; ?></textarea>
+                                <textarea class="form-control" name="content" id="contentEditor" rows="15" required></textarea>
                             </div>
                         </div>
                         
@@ -517,7 +500,7 @@ include 'includes/header.php';
                                 <select class="form-select" name="category_id">
                                     <option value="">Pilih Kategori</option>
                                     <?php foreach ($categories as $cat): ?>
-                                    <option value="<?php echo $cat['id']; ?>" <?php echo $editData && $editData['category_id'] == $cat['id'] ? 'selected' : ''; ?>>
+                                    <option value="<?php echo $cat['id']; ?>">
                                         <?php echo htmlspecialchars($cat['name']); ?>
                                     </option>
                                     <?php endforeach; ?>
@@ -528,7 +511,7 @@ include 'includes/header.php';
                                 <label class="form-label">Tags</label>
                                 <select class="form-select" name="tags[]" multiple size="5">
                                     <?php foreach ($tags as $tag): ?>
-                                    <option value="<?php echo $tag['id']; ?>" <?php echo $editData && in_array($tag['id'], $editData['tags'] ?? []) ? 'selected' : ''; ?>>
+                                    <option value="<?php echo $tag['id']; ?>">
                                         <?php echo htmlspecialchars($tag['name']); ?>
                                     </option>
                                     <?php endforeach; ?>
@@ -539,14 +522,14 @@ include 'includes/header.php';
                             <div class="form-group mb-3">
                                 <label class="form-label">Status</label>
                                 <select class="form-select" name="status">
-                                    <option value="draft" <?php echo $editData && $editData['status'] == 'draft' ? 'selected' : ''; ?>>Draft</option>
-                                    <option value="published" <?php echo $editData && $editData['status'] == 'published' ? 'selected' : ''; ?>>Published</option>
-                                    <option value="archived" <?php echo $editData && $editData['status'] == 'archived' ? 'selected' : ''; ?>>Archived</option>
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Published</option>
+                                    <option value="archived">Archived</option>
                                 </select>
                             </div>
                             
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" <?php echo $editData && $editData['is_featured'] ? 'checked' : ''; ?>>
+                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured">
                                 <label class="form-check-label" for="is_featured">
                                     Featured Article
                                 </label>
@@ -555,9 +538,6 @@ include 'includes/header.php';
                             <div class="form-group mb-3">
                                 <label class="form-label">Featured Image</label>
                                 <input type="file" class="form-control" name="featured_image" accept="image/*">
-                                <?php if ($editData && $editData['featured_image']): ?>
-                                <img src="<?php echo SITE_URL; ?>/assets/img/articles/<?php echo htmlspecialchars($editData['featured_image']); ?>" class="img-thumbnail mt-2" style="max-width: 200px;">
-                                <?php endif; ?>
                             </div>
                             
                             <hr>
@@ -566,24 +546,24 @@ include 'includes/header.php';
                             
                             <div class="form-group mb-3">
                                 <label class="form-label">Meta Title</label>
-                                <input type="text" class="form-control" name="meta_title" value="<?php echo $editData ? htmlspecialchars($editData['meta_title']) : ''; ?>">
+                                <input type="text" class="form-control" name="meta_title">
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label class="form-label">Meta Description</label>
-                                <textarea class="form-control" name="meta_description" rows="3"><?php echo $editData ? htmlspecialchars($editData['meta_description']) : ''; ?></textarea>
+                                <textarea class="form-control" name="meta_description" rows="3"></textarea>
                             </div>
                             
                             <div class="form-group mb-3">
                                 <label class="form-label">Meta Keywords</label>
-                                <input type="text" class="form-control" name="meta_keywords" value="<?php echo $editData ? htmlspecialchars($editData['meta_keywords']) : ''; ?>">
+                                <input type="text" class="form-control" name="meta_keywords">
                             </div>
                         </div>
                     </div>
                     
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i><?php echo $editId ? 'Update Artikel' : 'Simpan Artikel'; ?>
+                            <i class="fas fa-save me-2"></i>Simpan Artikel
                         </button>
                     </div>
                 </form>
@@ -611,12 +591,5 @@ document.getElementById('sortBy').addEventListener('change', function() {
     window.location.href = '?sort=' + this.value;
 });
 </script>
-
-<?php if ($editId): ?>
-<script>
-var myModal = new bootstrap.Modal(document.getElementById('articleModal'));
-myModal.show();
-</script>
-<?php endif; ?>
 
 <?php include 'includes/footer.php'; ?>

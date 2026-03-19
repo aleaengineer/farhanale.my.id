@@ -104,22 +104,22 @@ include 'includes/header.php';
                 <form method="POST" action="">
                     <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
                         <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general">
+                            <button class="nav-link active" type="button" data-tab="general">
                                 <i class="fas fa-cog me-2"></i>General
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#social">
+                            <button class="nav-link" type="button" data-tab="social">
                                 <i class="fas fa-share-alt me-2"></i>Social Media
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#display">
+                            <button class="nav-link" type="button" data-tab="display">
                                 <i class="fas fa-th-large me-2"></i>Display
                             </button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#analytics">
+                            <button class="nav-link" type="button" data-tab="analytics">
                                 <i class="fas fa-chart-line me-2"></i>Analytics
                             </button>
                         </li>
@@ -239,7 +239,7 @@ include 'includes/header.php';
                             </div>
                             
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="enable_comments" name="enable_comments" <?php echo getSetting('enable_comments') === 'true' ? 'checked' : ''; ?>>
+                                <input class="form-check-input" type="checkbox" id="enable_comments" name="enable_comments" <?php echo getSetting('enable_comments') == 'true' ? 'checked' : ''; ?>>
                                 <label class="form-check-label" for="enable_comments">
                                     Enable Comments
                                 </label>
@@ -255,7 +255,7 @@ include 'includes/header.php';
                             <h5 class="mb-4">Analytics Settings</h5>
                             
                             <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="enable_analytics" name="enable_analytics" <?php echo getSetting('enable_analytics') === 'true' ? 'checked' : ''; ?>>
+                                <input class="form-check-input" type="checkbox" id="enable_analytics" name="enable_analytics" <?php echo getSetting('enable_analytics') == 'true' ? 'checked' : ''; ?>>
                                 <label class="form-check-label" for="enable_analytics">
                                     Enable Analytics
                                 </label>
@@ -281,5 +281,43 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tabButtons = document.querySelectorAll('#settingsTabs .nav-link');
+    var tabContent = document.querySelectorAll('.tab-pane');
+    
+    function switchTab(tabId) {
+        tabButtons.forEach(function(button) {
+            button.classList.remove('active');
+        });
+        tabContent.forEach(function(content) {
+            content.classList.remove('show', 'active');
+        });
+        
+        var targetButton = document.querySelector('#settingsTabs .nav-link[data-tab="' + tabId + '"]');
+        var targetContent = document.querySelector('#' + tabId);
+        
+        if (targetButton && targetContent) {
+            targetButton.classList.add('active');
+            targetContent.classList.add('show', 'active');
+            localStorage.setItem('activeSettingsTab', tabId);
+        }
+    }
+    
+    tabButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            var tabId = this.getAttribute('data-tab');
+            switchTab(tabId);
+        });
+    });
+    
+    var savedTab = localStorage.getItem('activeSettingsTab');
+    if (savedTab) {
+        switchTab(savedTab);
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>
