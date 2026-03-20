@@ -10,6 +10,64 @@ $message = '';
 $messageType = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action']) && $_POST['action'] === 'update_account') {
+        $current_password = $_POST['current_password'];
+        $new_username = sanitize($_POST['username']);
+        $new_password = $_POST['new_password'];
+        $confirm_password = $_POST['confirm_password'];
+        
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch();
+        
+        if (!password_verify($current_password, $user['password'])) {
+            $message = 'Password saat ini salah!';
+            $messageType = 'error';
+        } elseif (!empty($new_password) && strlen($new_password) < 6) {
+            $message = 'Password baru minimal 6 karakter!';
+            $messageType = 'error';
+        } elseif (!empty($new_password) && $new_password !== $confirm_password) {
+            $message = 'Konfirmasi password tidak cocok!';
+            $messageType = 'error';
+        } else {
+            $updateFields = [];
+            $params = [];
+            
+            if ($new_username !== $user['username']) {
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND id != ?");
+                $stmt->execute([$new_username, $_SESSION['user_id']]);
+                if ($stmt->fetch()) {
+                    $message = 'Username sudah digunakan!';
+                    $messageType = 'error';
+                } else {
+                    $updateFields[] = "username = ?";
+                    $params[] = $new_username;
+                    $_SESSION['username'] = $new_username;
+                }
+            }
+            
+            if (!empty($new_password)) {
+                $updateFields[] = "password = ?";
+                $params[] = password_hash($new_password, PASSWORD_DEFAULT);
+            }
+            
+            if (!empty($updateFields)) {
+                $params[] = $_SESSION['user_id'];
+                $sql = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE id = ?";
+                $stmt = $pdo->prepare($sql);
+                if ($stmt->execute($params)) {
+                    $message = 'Akun berhasil diperbarui!';
+                    $messageType = 'success';
+                } else {
+                    $message = 'Gagal memperbarui akun.';
+                    $messageType = 'error';
+                }
+            } else {
+                $message = 'Tidak ada perubahan yang disimpan.';
+                $messageType = 'warning';
+            }
+        }
+    } else {
     $settings = [
         'site_name' => sanitize($_POST['site_name']),
         'site_description' => sanitize($_POST['site_description']),
@@ -44,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $message = 'Gagal menyimpan pengaturan.';
         $messageType = 'error';
+    }
     }
 }
 
@@ -101,7 +160,7 @@ include 'includes/header.php';
         
         <div class="card">
             <div class="card-body">
-                <form method="POST" action="">
+                <form method="POST" action="" id="settingsForm">
                     <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
                         <li class="nav-item">
                             <button class="nav-link active" type="button" data-tab="general">
@@ -121,6 +180,11 @@ include 'includes/header.php';
                         <li class="nav-item">
                             <button class="nav-link" type="button" data-tab="analytics">
                                 <i class="fas fa-chart-line me-2"></i>Analytics
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" type="button" data-tab="account">
+                                <i class="fas fa-user me-2"></i>Account
                             </button>
                         </li>
                     </ul>
@@ -267,11 +331,67 @@ include 'includes/header.php';
                                 <small class="text-muted">Format: G-XXXXXXXXXX atau UA-XXXXXXXX-X</small>
                             </div>
                         </div>
+                        
+                        <div class="tab-pane fade" id="account">
+                            <h5 class="mb-4">Account Settings</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Username *</label>
+                                        <input type="text" class="form-control" name="username" value="<?php echo htmlspecialchars($_SESSION['username']); ?>" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" name="full_name" value="<?php echo htmlspecialchars($_SESSION['full_name'] ?? ''); ?>" readonly disabled>
+                                        <small class="text-muted">Hubungi admin untuk mengubah full name</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h6 class="mb-3">Change Password</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Current Password *</label>
+                                        <input type="password" class="form-control" name="current_password" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-control" name="new_password" minlength="6" placeholder="Min. 6 karakter">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" name="confirm_password" minlength="6" placeholder="Ulangi password baru">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="text-end">
+                                <button type="submit" name="action" value="update_account" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Update Account
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
-                    <hr>
+                    <hr id="settingsSubmitHr">
                     
-                    <div class="text-end">
+                    <div class="text-end" id="settingsSubmitBtn">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-2"></i>Simpan Pengaturan
                         </button>
@@ -302,6 +422,15 @@ document.addEventListener('DOMContentLoaded', function() {
             targetButton.classList.add('active');
             targetContent.classList.add('show', 'active');
             localStorage.setItem('activeSettingsTab', tabId);
+        }
+        
+        var settingsSubmitBtn = document.getElementById('settingsSubmitBtn');
+        var settingsSubmitHr = document.getElementById('settingsSubmitHr');
+        if (settingsSubmitBtn) {
+            settingsSubmitBtn.style.display = tabId === 'account' ? 'none' : 'block';
+        }
+        if (settingsSubmitHr) {
+            settingsSubmitHr.style.display = tabId === 'account' ? 'none' : 'block';
         }
     }
     

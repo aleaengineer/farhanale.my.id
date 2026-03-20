@@ -302,6 +302,16 @@ include 'includes/header.php';
                 <h2 class="header-title">Manajemen Artikel</h2>
             </div>
             <div class="header-right">
+                <div class="user-info">
+                    <img src="<?php echo getAvatar($_SESSION['full_name'] ?? $_SESSION['username']); ?>" alt="User" class="user-avatar">
+                    <div class="user-details">
+                        <span class="user-name"><?php echo htmlspecialchars($_SESSION['full_name'] ?? $_SESSION['username']); ?></span>
+                        <span class="user-role"><?php echo htmlspecialchars(ucfirst($_SESSION['role'])); ?></span>
+                    </div>
+                </div>
+                <a href="logout.php" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articleModal">
                     <i class="fas fa-plus me-2"></i>Tambah Artikel
                 </button>
